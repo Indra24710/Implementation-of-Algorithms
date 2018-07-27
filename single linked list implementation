@@ -1,0 +1,253 @@
+public interface ISLL<E>{
+	int size();
+	boolean isEmpty();
+	E first();
+	Object getlast();
+	E last();
+	Object getHead();
+	void addFirst(E e);
+	void addLast(E e);
+	E removeFirst();
+	E removeLast();
+	void printList();
+	Object findNode(E e);
+}
+
+
+public class Node<E> {
+
+	private E element;
+	Node<E> next;
+	public Node(){
+		element = null;
+		next = null;
+	}
+	public Node(E e, Node<E> n) {
+		element = e;
+		next = n;
+	}
+	
+	public E getElement( ) { return element; }
+	
+	public Node<E> getNext( ) { return next; }
+	
+	public void setNext(Node<E> n) { next = n; }
+
+}
+
+public class SinglyLinkedList<E> implements ISLL<E>{
+    private Node<E> head = null;
+    private int sz = 0;
+    public SinglyLinkedList( ) { }
+        // constructs an initially empty list
+    public int size() { return sz; }
+    
+    public boolean isEmpty() { return sz == 0; }
+    
+    public E first() {
+        // returns (but does not remove) the first element
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            E e=head.getElement();
+            return e;
+        }
+    }
+    public Node<E> DeleteBefore(int n) {
+        int i=0;
+        
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            if(sz>=3) {
+            Node<E> temp=new Node<E>();
+            Node<E> temp1=new Node<E>();
+            Node<E> temp2=new Node<E>();
+            temp=head;
+            temp1=head.getNext();
+            temp2=temp1.getNext();
+            while(i<n) {
+                temp=temp.getNext();
+                temp1=temp1.getNext();
+                temp2=temp2.getNext();
+                 i=i+3;            
+            }
+            temp.setNext(temp2);
+            temp1.setNext(null);
+            sz--;
+            return temp1;
+            
+        }
+    else {
+        if(n==1) {
+            System.out.println("error");
+            return null;
+        }else {
+            Node<E> temp=new Node<E>();
+            temp=head.getNext();
+            head.setNext(null);
+            head=temp;
+            sz--;
+            return head;
+        }
+    }
+        }}
+    
+    
+    
+    public Node<E> getHead() {
+        // returns (but does not remove) the first element
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            return head;
+        }
+    }
+    
+    public E last() {
+        // returns (but does not remove) the last element
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            Node<E> temp=new Node<E>();
+            temp=head;
+            while(temp.getNext()!=null) {
+                temp=temp.getNext();
+            }
+            return temp.getElement();
+        }
+    }
+    
+    public Node<E> getlast() {
+        // returns (but does not remove) the last element
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            Node<E> temp=new Node<E>();
+            temp=head;
+            while(temp.getNext()!=null) {
+                temp=temp.getNext();
+            }
+            return temp;
+        }
+    }
+    
+    // update methods
+    public void addFirst(E e) {    // adds element e to the front of the list
+            // create and link a new node
+       Node<E> temp=new Node<E>(e,null);
+       if(isEmpty()) {
+           head=temp;
+           sz++;
+       }else {
+           temp.setNext(head);
+           head=temp;
+           sz++;
+       }
+    } 
+    
+    public void addLast(E e) {
+        // adds element e to the end of the list
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            
+        }else {
+            Node<E> temp=new Node<E>();
+            Node<E> temp1=new Node<E>(e,null);
+            temp=head;
+            while(temp.getNext()!=null) {
+                temp=temp.getNext();
+            }
+            temp.setNext(temp1);
+            sz++;
+        }
+    }
+    
+    public E removeFirst( ) {
+        // removes and returns the first element
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            Node<E> temp=new Node<E>();
+            Node<E> temp2=new Node<E>();
+            temp=head;
+            temp2=head.getNext();
+            head=temp2;
+            temp.setNext(null);
+            sz--;
+            return temp.getElement();
+            
+        }
+    }
+    
+    public E removeLast() {
+        // removes and returns the first element
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            Node<E> temp=new Node<E>();
+            Node<E> temp2=new Node<E>();
+            temp=head;
+            temp2=head.getNext();
+            while(temp2.getNext()!=null) {
+                temp=temp.getNext();
+                temp2=temp2.getNext();
+            }
+            temp.setNext(null);
+            sz--;
+           return temp2.getElement();
+            
+        }
+    } 
+    
+    public void printList(){
+        Node<E> temp = head;
+        while(temp!=null){
+            System.out.print(temp.getElement()+",");
+            temp = temp.getNext();
+        }
+    }
+    
+    public Node<E> findNode(E elt) {
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            return null;
+        }else {
+            Node<E> temp=new Node<E>();
+            temp=head;
+            while(temp.getNext()!=null) {
+                if(temp.getElement()==elt) {
+                    break;
+                }
+                temp=temp.getNext();
+            }
+            return temp;
+        }
+    
+    }
+    public void odd() {
+        if(isEmpty()) {
+            System.out.println("ListEmptyException");
+            
+        }else {
+            
+            Node<E> temp= new Node<E>();
+            temp=head;
+            int i=1;
+            while(i<sz) {
+                System.out.println(temp.getElement());
+                temp=temp.getNext();
+                temp=temp.getNext();
+                i=i+2;
+            }
+        }
+    }
+    
+}
