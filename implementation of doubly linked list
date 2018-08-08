@@ -1,0 +1,251 @@
+import java.util.Scanner;
+ class main {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+Scanner input=new Scanner(System.in);
+int testcases=Integer.parseInt(input.nextLine());
+ int t=0;
+while(t<testcases)
+{
+	ILL<Integer> List=new LL<Integer>();
+	int operations=Integer.parseInt(input.nextLine());
+	int op=0;
+	while(op<operations)
+	{
+		String oper=input.nextLine();
+		String[] temp=oper.split(" ");
+		if(temp[0].equals("I"))
+		{
+			System.out.println(List.isEmpty());
+		}
+		if(temp[0].equals("S"))
+		{
+			System.out.println(List.size());
+		}
+		if(temp[0].equals("AF"))
+		{	
+			List.addFirst(Integer.parseInt(temp[1]));
+			List.printList();
+		}
+		if(temp[0].equals("AL"))
+		{
+			List.addLast(Integer.parseInt(temp[1]));
+			List.printList();
+		}
+		if(temp[0].equals("RF"))
+		{
+			List.removeFirst();
+			List.printList();
+		}
+		if(temp[0].equals("RL"))
+		{
+			List.removeLast();
+			List.printList();
+		}
+		if(temp[0].equals("F"))
+		{
+			System.out.println(List.first());
+		}
+		if(temp[0].equals("L"))
+		{
+			System.out.println(List.last());
+		}
+		if(temp[0].equals("FIND"))
+		{
+			         System.out.println(List.findNode(Integer.parseInt(temp[1])));
+		}
+		op++;
+	}
+	t++;
+}
+}
+}
+class Node<E>
+{
+	public E element;
+	Node<E> next;
+	Node<E> prev;
+	public Node()
+	{
+		next=null;
+		prev=null;
+	}
+	public Node(E e)
+	{
+		element=e;
+		next=null;
+		prev=null;
+	}
+	void setElement(E e)
+	{
+		element=e;
+	}
+	E getElement()
+	{
+		return element;
+	}
+}
+interface ILL<E>
+{
+	int size();
+	boolean isEmpty();
+	E first();
+	E last();
+	void addFirst(E e);
+	void addLast(E e);
+	E removeFirst();
+	E removeLast();
+	void printList();
+	E findNode(E e);
+	Node<E> getHead() ;
+	Node<E> getlast() ;
+}
+class LL<E> implements ILL<E>
+{
+	private Node<E> tail = null;
+	private Node<E> head=null;
+	 int siz=0;
+	public boolean isEmpty()
+	{
+		return (siz==0);
+	}
+	public Node<E> getHead() {
+		return head;
+	}
+	public Node<E> getlast() {
+        return tail;
+	}
+	public int size()
+	{
+		return siz;
+	}
+	public void addFirst(E e)
+	{
+		Node<E> temp=new Node<E>(e);
+		if(isEmpty()==true){
+		head=temp;
+		tail=temp;
+		siz++;
+		
+		}
+		else{
+		    temp.next=head;
+		    head.prev=temp;
+		    head=temp;
+		    siz++;
+		}
+ 
+	}
+	public void addLast(E e)
+	{
+		Node<E> temp=new Node<E>(e);
+	    if(isEmpty()==true){
+				head=temp;
+				tail=temp;
+				siz++;
+				}
+				else{
+				    temp.prev=tail;
+				    tail.next=temp;
+				    tail=temp;
+				    siz++;
+				}
+ 
+	}
+	public E removeFirst()
+	{
+		if(isEmpty())
+		{
+			System.out.println("ListEmptyException");
+		}
+		else
+		{
+			Node<E> temp=head;
+			if(siz==1)
+			{
+		        head=null;
+		        tail=null;
+			}
+			else
+			{
+				head=head.next;
+				temp.next=null;
+				head.prev=null;
+			}
+			siz--;
+		}
+		return null;
+	}
+	public E removeLast() {
+	     if(isEmpty()){
+			System.out.println("ListEmptyException");
+	    }
+	    else if(size()==1)
+	    {
+	        head=null;
+	        tail=null;
+	        siz--;
+	    }
+	    else{
+       tail=tail.prev;
+       tail.next=null;
+	    siz--;
+	    }
+		return null;
+	} 
+ 
+	public E first()
+	{
+		return head.getElement();
+	}
+	public E last()
+	{
+		return tail.getElement();
+	}
+	
+       public E findNode(E e) {
+        // TODO Auto-generated method stub
+        
+        if(isEmpty()==true) {
+            //System.out.println("ListEmptyException");
+            return null;        
+        }else {
+            Node<E>temp= head;
+            //Node <E>temp2= head.next;
+            while(temp.next!=null) {
+                if(temp.element==e) {
+                    
+                    return temp.element;
+                }else {
+                temp=temp.next;
+                
+            }}
+            
+            
+            return null;
+            
+            
+            
+        }
+    }
+	
+	public void printList() {
+		if (size()==0) {
+			System.out.println("List Empty");
+		}
+		else {
+			Node<E> temp = head;
+			while (temp != null) {
+				System.out.print(temp.getElement() + "->");
+				temp = temp.next;
+			}
+			System.out.print("null\n");
+			temp = tail;
+			while (temp != null) {
+				System.out.print(temp.getElement() + "->");
+				temp = temp.prev;
+			}
+			System.out.print("null\n");
+		}
+	}
+}
