@@ -1,0 +1,79 @@
+import java.util.*;
+class mergesort {
+	
+ 
+ 
+		   
+	   
+	     void Msort(int[] Arr,int start,int end) {
+	    
+	        if(end-start<2){
+	            return;
+	        }
+	        
+	        int mid= ((end+start)/2);
+	        
+	        Msort(Arr,start,mid);
+	        Msort(Arr,mid,end);
+	        Merge(Arr,start,mid,end);
+	        
+	        
+	        
+	        
+	    }
+	    public void Merge(int[] Arr,int start, int mid, int end){
+	    	
+	    if(Arr[mid-1]<=Arr[mid]){
+	        return;
+	    }
+	    
+	    int i=start;
+	    int j=mid;
+	    int tempind=0;
+	    int [] temp=new int[end-start];
+	    while((i<mid)&&(j<end)){
+	        if(Arr[i]<=Arr[j]){
+	            temp[tempind++]= Arr[i++];
+	        }else{
+	 temp[tempind++]= Arr[j++];
+ 
+	        }
+	    }
+	    
+	    System.arraycopy(Arr,i,Arr,start+tempind,mid-i);
+	    System.arraycopy(temp,0,Arr,start,tempind);
+	    	
+	    	
+	    }
+		
+	  public static void main(String args[]){
+	  
+		 
+		Scanner scan = new Scanner(System.in);    	
+		mergesort MS = new mergesort();
+	     	int testcases = scan.nextInt();
+	        for (int j=0;j<testcases;j++){
+	          	int n = scan.nextInt();
+	          	int arrlist[] = new int[n];
+	          	for (int i=0;i<n;i++){
+	         	   arrlist[i] =scan.nextInt();
+	          	}
+	          	MS.Msort(arrlist,0,n);
+	          	
+	          	for(int i=0;i<n;i++){
+	          	    System.out.print(arrlist[i]+" ");
+	          	}
+	          	System.out.println();
+	      	}	
+	  }
+ 
+	public void printArray(int[] arrlist) {
+		// TODO Auto-generated method stub
+		int i=0;
+		int size=arrlist.length;
+		while(i<size) {
+			System.out.print(arrlist[i]+" ");
+			i++;
+		}
+	}}
+ 
