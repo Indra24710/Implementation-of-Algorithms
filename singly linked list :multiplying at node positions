@@ -1,0 +1,318 @@
+
+
+import java.util.Scanner;
+
+class Node<E> {
+
+	private E element;
+	Node<E> next;
+
+	public Node() {
+		element = null;
+		next = null;
+	}
+
+	public Node(E e, Node<E> n) {
+		element = e;
+		next = n;
+	}
+    public void setelement(E e)
+    {
+    	element=e;
+    }
+	public E getElement() {
+		return element;
+	}
+
+	public Node<E> getNext() {
+		return next;
+	}
+
+	public void setNext(Node<E> n) {
+		next = n;
+	}
+
+}
+
+interface ISLL<E> {
+	int size();
+
+	boolean isEmpty();
+
+	E first();
+
+	Object getlast();
+
+	E last();
+
+	Object getHead();
+
+	void addFirst(E e);
+
+	void addLast(E e);
+
+	E removeFirst();
+
+	E removeLast();
+
+	void printList();
+
+	Object findNode(E e);
+
+	void multkth(String temp);
+}
+ class SLLIST {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		Scanner scan = new Scanner(System.in);
+		int testcases = Integer.parseInt(scan.nextLine());
+		ISLL<Integer> list = new SinglyLinkedList<Integer>();
+		int inputs = Integer.parseInt(scan.nextLine());
+		Node node=null;
+
+		while (inputs > 0) {
+			String operation = scan.nextLine();
+			String[] temp = operation.split(" ");
+			if (temp[0].equals("I"))
+				System.out.println(list.isEmpty());
+			if (temp[0].equals("P")) {
+				list.printList();
+			}
+			if (temp[0].equals("F")) {
+				System.out.println(list.first());
+			}
+			if (temp[0].equals("L")) {
+				System.out.println(list.last());
+			}
+			if (temp[0].equals("AF")) {
+				list.addFirst(Integer.parseInt(temp[1]));
+				list.printList();
+			}
+			if (temp[0].equals("AL")) {
+				list.addLast(Integer.parseInt(temp[1]));
+				list.printList();
+			}
+			if (temp[0].equals("RF")) {
+				list.removeFirst();
+				list.printList();
+			}
+			if (temp[0].equals("RL")) {
+			
+				list.removeLast();
+			
+				list.printList();
+		}
+			
+			if (temp[0].equals("FIND")) {
+				Node e=(Node<Integer>)list.findNode(Integer.parseInt(temp[1]));
+				if(e==null)
+					System.out.println("null");
+				else
+					System.out.println(e.getElement());
+			}
+			if (temp[0].equals("MK")) {
+				list.multkth(temp[1]);
+			}
+			if(temp[0].equals("S")){
+			    System.out.println(list.size());
+			}
+
+			inputs--;
+		}
+
+	
+
+}}
+
+class SinglyLinkedList<E> implements ISLL<E> {
+	private Node<E> head = null;
+	private int sz = 0;
+
+	public SinglyLinkedList() {
+	}
+
+	// constructs an initially empty list
+	public int size() {
+		return sz;
+	}
+
+	public boolean isEmpty() {
+		return sz == 0;
+	}
+
+	public E first() {
+		// returns (but does not remove) the first element
+		if (sz == 0) {
+			//System.out.println("Linked List Empty Exception");
+			return null;
+		} else
+			return head.getElement();
+
+	}
+
+	public Node<E> getHead() {
+		// returns (but does not remove) the first element
+		if (sz== 0) {
+			//System.out.println("Linked List Empty Exception");
+			return null;
+		} else {
+			return head;
+		}
+	}
+
+	public E last() {
+		// returns (but does not remove) the last element
+		if (sz == 0) {
+			//System.out.println("Linked List Empty Exception");
+			return null;
+		} else {
+			Node<E> temp = new Node<E>();
+			temp = head;
+			while (temp.next != null) {
+				temp = temp.next;
+			}
+			return temp.getElement();
+		}
+	}
+
+	public Node<E> getlast() {
+		// returns (but does not remove) the last element
+		Node<E> temp = new Node<E>();
+		temp = head;
+		while (temp.next != null) {
+			temp = temp.next;
+		}
+		return temp;
+	}
+
+	// update methods
+	public void addFirst(E e) { // adds element e to the front of the list
+		// create and link a new node
+      Node<E> temp=new Node<E>(e,null);
+      if(isEmpty()) {
+    	  head=temp;
+    	  sz++;
+      }else {
+    	  temp.next=head;
+    	  head=temp;
+    	  sz++;
+      }
+
+	}
+
+	public void addLast(E e) {
+		// adds element e to the end of the list
+		if (head == null)
+			head = new Node<E>(e, null);
+		else {
+			Node<E> temp = new Node<E>(e, null); // a new node is created with value e and next is null
+			Node<E> last = getlast(); // getlast will get the last node.
+			last.next = temp; // new value will become the last node.
+		}
+		sz++;
+
+	}
+
+
+	public E removeFirst() {
+		// removes and returns the first element
+		if (isEmpty()) {
+			System.out.println("ListEmptyException");
+			return null;
+		}
+		if (head == null)
+			return null;
+		else {
+			Node<E> temp = head; // value of current head is copied.
+			head = head.next; // current head's next is made head, i.e. second node is becoming head
+			sz--;
+			return temp.getElement();
+		}
+
+	}
+
+	public E removeLast() {
+		// removes and returns the first element
+if(isEmpty()) {
+	System.out.println("ListEmptyException");
+	return null;
+}else {
+	if(size()==1) {
+		head=null;
+		sz--;
+		return null;
+	}else {
+	Node<E> last=new Node<E>();
+	Node<E> first=new Node<E>();
+	first=head;
+	last=head.next;
+	while(last.next!=null) {
+		first=first.next;
+		last=last.next;
+	}
+	first.next=null;
+	sz--;
+	
+	
+	
+	return last.getElement();
+	}
+	}}
+
+	public void printList() {
+		Node<E> temp = head;
+		if(isEmpty()){
+		    System.out.println("List Empty");
+		}else{
+		while (temp != null) {
+			System.out.print(temp.getElement() + "->");
+			temp = temp.getNext();
+		}
+		System.out.print("null\n");
+	}}
+
+
+	public Node<E> findNode(E elt) {
+		Node<E> temp = head;
+		while (temp.getElement() != elt) {
+			if(temp.next==null)
+			{
+				return null;
+			}
+			temp = temp.next;
+		}
+		return temp;
+	}
+
+		@Override
+	public void multkth(String temp) {
+		// TODO Auto-generated method stub
+		int n=Integer.parseInt(temp);
+		int i=1;
+	    int prod=1;
+	    
+		Node<E> first=new Node<E>();
+		first=head;
+		while(first!=null) {
+			if(i==n) {
+				int j=((Integer) first.getElement());
+				
+				prod=prod*j;
+				first=first.next;
+				i=1;
+			}else {
+				first=first.next;
+				i++;
+			}
+			
+		}
+		System.out.println(prod);
+	}
+
+	
+	
+}
