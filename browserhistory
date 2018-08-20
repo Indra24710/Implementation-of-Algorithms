@@ -1,0 +1,175 @@
+import java.util.Scanner;
+ 
+ class Browser {
+ 
+	public static void main(String[] args) {
+	// TODO Auto-generated method stub
+	Scanner scan = new Scanner(System.in);
+	int testcases=0 ;
+	int operations=0;
+	int n = 0;
+	testcases= Integer.parseInt(scan.nextLine());
+	while (testcases>0) 
+	{
+	operations= Integer.parseInt(scan.nextLine());	
+	n = Integer.parseInt(scan.nextLine());
+	stack<String> history = new StackArray<String>(n);
+	for(int i=0;i<operations;i++) 
+	{
+	String operation = scan.nextLine();
+	String[] temp = operation.split(" ");
+	if (temp[0].equals("V")){
+	history.VisitPage(temp[1]);	
+	}
+	if (temp[0].equals("R"))
+	{
+	String a=history.RecentlyVisitedPage();
+	if(a==null)
+	{
+	System.out.println("History is empty");
+	}
+	else
+	{
+	System.out.println(a);
+	}
+	}
+	if (temp[0].equals("CA"))
+	{
+	history.ClearAll();
+	}
+	if (temp[0].equals("C"))
+	{
+	history.Clear(Integer.parseInt(temp[1]));
+	}
+	if (temp[0].equals("S"))
+	System.out.println(history.size());
+	if (temp[0].equals("L"))
+	{
+	history.List();
+	}
+	}
+	testcases --;
+	}
+	}
+ 
+}
+interface stack<E> {
+	int size();
+	boolean isEmpty();
+	void VisitPage(E e);
+	E pop();
+	E RecentlyVisitedPage();
+ void ClearAll();
+ void Clear(int n);
+	void List();
+}
+ 
+class StackArray<E> implements stack<E> {
+ 
+	private E[] data; // array container
+	private int t = -1; // index to top position
+	int CAPACITY=0;
+	public StackArray(int n) {
+	data = (E[]) new Object[n];
+	CAPACITY=n;
+	}
+ 
+	public int size() {
+	return (t + 1);
+	}
+ 
+	public boolean isEmpty() {
+	return (t < 0);
+	}
+ 
+	public void VisitPage(E e) {
+	if(t+1==CAPACITY)
+	{
+	System.out.println("HistoryFullException");
+	}
+	else
+	{
+	t++;
+	data[t] = e;
+	System.out.println(size());
+	}
+	}
+ 
+	public E RecentlyVisitedPage() {
+	if(size()==0)
+	return null;
+	else
+	return data[t];
+	}
+	
+	public void ClearAll() {
+	if(size()==0)
+	{
+	System.out.println("HistoryEmptyException");
+	}
+	
+	else{
+	int k = size();
+	while(k-- != 0)
+	{
+	System.out.print(pop() + " ");
+	}
+	System.out.println("");
+	}
+	
+	}
+	
+	public void Clear(int n){
+	if(size()==0)
+	{
+	System.out.println("HistoryEmptyException");
+	return;
+	}
+	else
+	{
+	int k = n;
+	while(k-- != 0)
+	{
+	if(t==-1)
+	{
+	System.out.println("HistoryEmptyException");
+	return;
+	}
+	System.out.println(pop() +" "+size());
+	}
+	
+	}
+	}
+	
+	
+	public E pop() {
+	if(t==-1)
+	{
+	System.out.println("HistoryEmptyException");
+	return null;
+	}
+	else
+	{
+	E temp = data[t];
+	data[t]=null;
+	t--;
+	return temp;
+	}
+	}
+ 
+	public void List() {
+	if(t==-1)
+	{
+	System.out.println("HistoryEmptyException");
+	}
+	else
+	{
+	int n = size();
+	for(int i = 0; i < n; i++)
+	{
+	System.out.print(data[i] + " ");
+	}
+	System.out.println("");
+	}
+	}
+}
