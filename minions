@@ -1,0 +1,447 @@
+package q4;
+
+
+
+
+public interface IBST<E> {
+	int size();
+	boolean isEmpty();
+	Node<E> getRoot();
+	void setRoot(Node<E> node);
+	Object findNode(int val);
+	void insertNode(int k1, E val);
+	void printTree();
+	void inorderTraverse(Node<E> node);
+	void preorderTraverse(Node<E> node);
+	void postorderTraverse(Node<E> node);
+	void levelorderTraverse(Node<E> node);
+	int getDepth(Node<E> node);
+	int getHeight(Node<E> node);
+	Node<Integer> minions(Node<Integer> node);
+	void successorPredecessor(Node root, int val);
+	int succ();
+	int pred();
+}
+
+
+
+
+
+
+
+package q4;
+
+
+//Modify this to include a key value pair, and add corresponding methods.
+
+public class Node<E> {
+
+	/**
+	 * @param args
+	 */
+	private E element; 
+	private int key;
+	private Node<E> parent;
+	private Node<E> leftchild;
+	private Node<E> rightchild;
+	public Node(){
+		element = null;
+		key = -1;
+		parent = null;
+		leftchild = null;
+		rightchild = null;
+	}
+	public Node(int k, E e, Node curparent)
+	{
+		key = k;
+		element = e;
+		parent = curparent;
+	}
+	public E getElement(){
+		return element;
+	}
+	public int getKey(){
+		return key;
+	}
+	public Node<E> getParent(){
+		return parent;
+	}
+	public Node<E> getlChild(){
+		return leftchild;
+	}
+	public Node<E> getrChild(){
+		return rightchild;
+	}
+	public void setKey(int k1){
+		key = k1;
+	}
+	public void setElement(E e){
+		element = (E) e;
+	}
+	public void setParent(Node<E> parent1){
+		parent = parent1;
+	}
+	public void setLeft(Node<E> lchild){
+		leftchild = lchild;
+		leftchild.setParent(this);
+	}
+	public void setRight(Node<E> rchild){
+		rightchild = rchild;
+		rightchild.setParent(this);
+	}
+	public boolean isInternal(){
+		return (leftchild!=null || rightchild!=null);
+	}
+	public boolean isExternal(){
+		return (leftchild==null && rightchild ==null);
+	}
+	public boolean isRoot(){
+		return (parent == null);
+	}
+}
+
+
+
+
+
+
+
+package q4;
+
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+
+public class BinarySearchTree<E> implements IBST<E> {
+	private Node<E> root;
+	private int sz;
+	public Node<E> nodelist[] = new Node[20];
+	public BinarySearchTree(){
+		root = null;
+		sz=0;
+	}
+	
+	public int size() {
+		// TODO Auto-generated method stub
+		return sz;
+	}
+
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return sz==0;
+	}
+
+	public Node<E> getRoot() {
+		// TODO Auto-generated method stub
+		return root;
+	}
+
+	public void setRoot(Node<E> node) {
+		// TODO Auto-generated method stub
+		root = node;
+		sz++;
+	}
+
+	public Node<E> findNode(int f) {
+		Node<E> cur = root;
+		while (cur!=null){
+			if (cur.getKey()==f){
+				return cur;
+			}
+			else if (cur.getKey()>f){
+				if (cur.getlChild()==null){
+					return cur;
+				}
+				else cur = cur.getlChild();
+			}
+			else {
+				if (cur.getrChild()==null){
+					return cur;
+				}
+				else cur = cur.getrChild();
+			}
+		}
+		return cur;
+	}
+
+	public void insertNode(int k1, E e) {
+		
+		Node<E> curnode = new Node<E>();
+		curnode.setKey(k1);
+		curnode.setElement(e);
+		if (size()==0){
+			root = curnode;
+			sz+=1;
+		}
+		else{
+			Node<E> temp = new Node<E>();
+			temp =	(Node<E>) findNode(k1);
+			//System.out.println("Found"+temp.getKey() + ":"+k1);
+			if (temp.getKey()>k1){
+				temp.setLeft(curnode);
+				curnode.setParent(temp);
+			}
+			else{
+				temp.setRight(curnode);
+				curnode.setParent(temp);
+			}
+		}
+	}
+
+	public void printTree() {
+		// TODO Auto-generated method stub
+		preorderTraverse(root);
+	}
+
+	public void inorderTraverse(Node<E> node) {
+		// TODO Auto-generated method stub
+		if(node.isInternal()&&node.getlChild()!=null)
+			inorderTraverse(node.getlChild());
+		System.out.print(node.getElement()+":");
+		if(node.isInternal()&&node.getrChild()!=null )
+			inorderTraverse(node.getrChild());
+	}
+
+	public void preorderTraverse(Node<E> node) {
+		// TODO Auto-generated method stub
+		System.out.print(node.getKey()+":");
+		if(node.isInternal()&&node.getlChild()!=null)
+			preorderTraverse(node.getlChild());
+		if(node.isInternal()&&node.getrChild()!=null)
+			preorderTraverse(node.getrChild());
+		
+	}
+
+	public void postorderTraverse(Node<E> node) {
+		// TODO Auto-generated method stub
+		if(node.isInternal()&&node.getlChild()!=null)
+			postorderTraverse(node.getlChild());
+		if(node.isInternal()&&node.getrChild()!=null)
+			postorderTraverse(node.getrChild());	
+		System.out.print(node.getElement()+":");
+	}
+
+	public void levelorderTraverse(Node<E> node) {
+		// TODO Auto-generated method stub
+		Queue<Node> queue = new LinkedList<Node>();
+		queue.add(node); //enqueue
+		Node tempNode=root ;// dequeues an element
+		while(!queue.isEmpty())
+		{  tempNode=queue.poll();
+			if(tempNode!=null)
+			{
+			if(node.getlChild()!=null)
+			queue.add(tempNode.getlChild());
+			if(node.getrChild()!=null)
+			queue.add(tempNode.getrChild());
+			System.out.println(tempNode.getKey()+":"+tempNode.getElement());
+			}
+		}
+	}
+
+	public int getDepth(Node<E> node) {
+		// TODO Auto-generated method stub
+		if(node.isRoot())
+			return 0;
+		else
+			return 1+ getDepth(node.getParent());
+	}
+
+	public int getHeight(Node<E> node) {
+		// TODO Auto-generated method stub
+		int h1 = 0,h2 = 0;
+		if(node.isExternal())
+			return 0;
+		else
+		{
+			if(node.getlChild()!=null)
+			 h1=getHeight(node.getlChild());
+			if(node.getrChild()!=null)
+			  h2=getHeight(node.getrChild());
+			if(h1<h2)
+				return h2+1;
+			else
+				return h1+1;		
+		}
+	}
+
+	/**
+	 * @param args
+	 */
+	Node deleteRec(Node root, float f) 
+    { 
+        /* Base Case: If the tree is empty */
+        if (root == null)  return root; 
+  
+        /* Otherwise, recur down the tree */
+        if (f < root.getKey()) 
+            root.setLeft(deleteRec(root.getlChild(), f)); 
+        else if (f > root.getKey()) 
+            root.setRight(deleteRec(root.getrChild(), f)); 
+  
+        // if key is same as root's key, then This is the node 
+        // to be deleted 
+        else
+        { 
+            // node with only one child or no child 
+            if (root.getlChild() == null) 
+                return root.getrChild(); 
+            else if (root.getrChild() == null) 
+                return root.getlChild(); 
+  
+            // node with two children: Get the inorder successor (smallest 
+            // in the right subtree) 
+            root.setKey( minValue(root.getrChild()).getKey());
+  
+            // Delete the inorder successor 
+            root.setRight(deleteRec(root.getrChild(), root.getKey())); 
+        } 
+  
+        return root; 
+    } 
+  
+    /* Given a non-empty binary search tree, return the minimum data   
+     value found in that tree. Note that the entire tree does not need 
+     to be searched. */
+    Node minValue(Node node) { 
+        Node current = node; 
+  
+        /* loop down to find the leftmost leaf */
+        while (current.getlChild() != null) { 
+            current = current.getlChild(); 
+        } 
+        return current; 
+    }
+    
+  
+    public int succ() {
+    	return successor;
+    }
+    public int pred() {
+    	return predecessor;
+    }
+ public   int successor, predecessor;
+    	public void successorPredecessor(Node root, int val) {
+    	//	float successor, predecessor;
+
+    		if (root != null) {
+    			if (root.getKey() == val) {
+    				
+    				if (root.getlChild() != null) {
+    					Node t = root.getlChild();
+    					while (t.getrChild() != null) {
+    						t = t.getrChild();
+    					}
+    					predecessor = t.getKey();
+    				}
+    				if (root.getrChild() != null) {
+    					
+    					Node t = root.getrChild();
+    					while (t.getlChild() != null) {
+    						t = t.getlChild();
+    					}
+    					successor = t.getKey();
+    				}
+    			} else if (root.getKey()> val) {
+    				
+    				successor = root.getKey();
+    				successorPredecessor(root.getlChild(), val);
+    			} else if (root.getKey() < val) {
+    				
+    				predecessor = root.getKey();
+    				successorPredecessor(root.getrChild(), val);
+    			}
+    		}
+    	}
+   
+    	public Node<Integer> minions(Node<Integer> node) {
+    	
+   
+       	    int x = (int) ((Math.random()*((2)+1))-1);
+       	    node=deleteRec(node,node.getKey());
+       	    E el=(E) node.getElement();
+       	    node.setKey((node.getKey()+x*((Integer)el)));
+       	    
+       	    insertNode(node.getKey(),el);
+       	    
+       	    return (Node<Integer>) node;
+
+    	}}
+    	
+    	
+    	
+    	
+    
+
+	
+	
+
+
+
+package q4;
+import java.util.Scanner;
+import java.util.Random;
+public class testTree<E> {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		IBST<Integer> btree1 = new BinarySearchTree<Integer>();
+		int n;
+		System.out.println("enter the no of minions");
+		Scanner inp=new Scanner(System.in);
+        n=inp.nextInt(); 
+		int i=0,j=0;
+		int arr[]=new int[n];
+		while(i<n) {
+			arr[i]=0;
+			i++;
+		}
+		i=0;
+         while(i<n) {
+        	 System.out.println("enter the position of the minions" );
+        	 arr[i]=inp.nextInt();
+        	 btree1.insertNode(arr[i], 1000000);
+        	 i++;
+         }
+         btree1.printTree();
+         int k;
+         System.out.println("enter the no of iterations");
+         k=inp.nextInt();
+         j=0;
+         while(j<k) {i=0;
+         while(i<n) {
+        	 Node<Integer> node=(Node<Integer>) btree1.findNode(arr[i]);
+        	System.out.println(node.getKey());
+        	 node=btree1.minions(node);
+        	 btree1.successorPredecessor(btree1.getRoot(),node.getKey());
+        	 int succ=btree1.succ();
+        	 int pred=btree1.pred();
+        	 
+        	 Node<Integer> suc=(Node<Integer>) btree1.findNode(succ);
+        	 Node<Integer> pre=(Node<Integer>) btree1.findNode(pred);
+             node.setElement((suc.getElement()/2)+(pre.getElement()/2)+(node.getElement()));
+        	 suc.setElement(suc.getElement()/2);
+        	 pre.setElement(pre.getElement()/2);
+        	 i++;
+        	 
+        	 
+        	 
+        	 
+        	 
+        	 i++;
+         }
+          btree1.printTree();                     
+ 
+        	j++;}
+         
+         
+         
+         
+         
+	}
+	
+	
+
+}
+
