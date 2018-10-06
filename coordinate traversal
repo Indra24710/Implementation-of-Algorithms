@@ -1,0 +1,539 @@
+package q1;
+
+public class Node<E> {
+    private E element;
+    private int elementy;
+    private Node<E> parent;
+    private Node<E> leftchild;
+    private Node<E> rightchild;
+    public Node(){
+        element = null;
+        parent = null;
+        leftchild = null;
+        rightchild = null;
+    }
+    public Node(E e, Node curparent)
+    {
+        element = e;
+        parent = curparent;
+    }
+    public E getElement(){
+        return element;
+    }
+    public Node<E> getParent(){
+        return parent;
+    }
+    public Node<E> getlChild(){
+        return leftchild;
+    }
+    public Node<E> getrChild(){
+        return rightchild;
+    }
+    public void setElement(E e){
+        element = e;
+    }
+    public void setelementy(int e) {
+    	elementy=e;
+    }
+    public int getelementy() {
+    	return elementy;
+    }
+    public void setParent(Node<E> parent1){
+        parent = parent1;
+    }
+    public void setLeft(Node<E> lchild){
+        leftchild=lchild;
+        leftchild.setParent(this);
+    }
+    public void setRight(Node<E> rchild){
+        rightchild=rchild;
+        rightchild.setParent(this);
+    }
+    public boolean isInternal(){
+        if((leftchild==null)&&(rightchild==null)) {
+            return false;
+        }
+        return true;
+    }
+    public boolean isExternal(){
+        if((leftchild==null)&&(rightchild==null)) {
+            return true;
+        }
+        return false;
+
+    }
+    public boolean isRoot(){
+        if(parent==null) {
+            return true;
+        }
+        return false;
+    }
+}
+
+
+
+
+
+
+
+
+
+public interface IBinaryTree<E> {
+	int size();
+	boolean isEmpty();
+	Object getRoot();
+	void setRoot(Node<E> node);
+	Object getNode(int pos);
+	Object findNode(E val);
+	void insertChild(Node<E> curnode, E elt, char type);
+	void constructTree(E[] eltArray);
+	void printTree();
+	void inorderTraverse(Node<E> node);
+	void preorderTraverse(Node<E> node);
+	void postorderTraverse(Node<E> node);
+	int levelorderTraverse(Node<E> node,int n);
+	int getDepth(Node<E> node);
+	int getHeight(Node<E> node);
+	boolean isProper(); //this method checks if the given tree is Proper or not
+	void printExternal(); //it prints all the external nodes of a tree
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.Collections;
+/**
+ * @author vi
+ *
+ */
+public class BinaryTree<E> implements IBinaryTree<E>{
+
+    private Node<E> root;
+    private int sz;
+    //public int node_size;
+  /*  public void siz(int size) {
+    	node_size=size;
+    }*/
+    private Node<E> nodelist[] = new Node[200];
+    int prop=0;
+    public BinaryTree(){
+        root = null;
+        sz=0;
+    }
+    
+    
+    public Node<E> getRoot() {
+        // TODO Auto-generated method stub
+        return root;
+    }
+
+    public void setRoot(Node<E> node) {
+        // TODO Auto-generated method stub
+        root = node;
+        sz++;
+    }
+    
+    public Node<E> findNode(E val){
+        
+        return null;
+    }
+    
+    public Node<E> getNode(int pos){
+        return nodelist[pos];
+    }
+    //inserts a node whose value is elt as a child of curnode
+    
+    public void insertChild(Node<E> curnode, E elt, char type) {
+        // TODO Auto-generated method stub
+        Node<E> child = new Node<E>();
+        child.setElement(elt);
+        if (type =='l'){
+            curnode.setLeft(child);
+        }
+        else curnode.setRight(child);
+        sz++;
+    }
+
+    public void constructTree(E[] eltArray) {
+        // TODO Auto-generated method stub
+        Node<E> newnode = new Node<E>(eltArray[1],null);
+        root = newnode;
+        nodelist[0]=null;
+        nodelist[1]=root;
+        for (int i=2; i<eltArray.length;i++){
+            if (eltArray[i]!=null){
+                
+                if(i%2==0){
+                   // System.out.println(nodelist[i/2]);
+                    insertChild(nodelist[i/2],eltArray[i],'l');
+                    nodelist[i]=nodelist[i/2].getlChild();
+                }
+                else{
+                    insertChild(nodelist[i/2],eltArray[i],'r');
+                    nodelist[i]=nodelist[i/2].getrChild();
+                }
+            }
+            else nodelist[i]=null;
+        }
+    }
+
+    public void printTree() {
+        // TODO Auto-generated method stub
+        for (int i=0;i<nodelist.length;i++)
+        {
+            if (nodelist[i]!=null){
+                System.out.println("Elt"+nodelist[i].getElement() + "Pos"+i);
+            }
+            else System.out.println("Null");
+        }
+        
+    }
+
+    public void inorderTraverse(Node<E> node) {
+        // TODO Auto-generated method stub
+        if(node==null) {
+            return;
+        }
+        if(node.getlChild()!=null) {
+            inorderTraverse(node.getlChild());
+        }
+        System.out.print(node.getElement()+" ");
+        if(node.getrChild()!=null) {
+            inorderTraverse(node.getrChild());
+        }
+    }
+
+    public void preorderTraverse(Node<E> node) {
+        // TODO Auto-generated method stub
+        System.out.print(node.getElement()+":");
+        if(node.isInternal()&&node.getlChild()!=null)
+            preorderTraverse(node.getlChild());
+        if(node.isInternal()&&node.getrChild()!=null)
+            preorderTraverse(node.getrChild());
+    }
+
+    public void postorderTraverse(Node<E> node) {
+        // TODO Auto-generated method stub
+        if(node==null) {
+            return;
+        }
+        if(node.getlChild()!=null) {
+            postorderTraverse(node.getlChild());
+        }
+        
+        if(node.getrChild()!=null) {
+            postorderTraverse(node.getrChild());
+        }
+        System.out.print(node.getElement()+" ");
+    }
+
+    public void levelorderTraverse(Node<E> node,int []y) {
+        // TODO Use the queue to do the traversal. You can also use the inbuilt Queue
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.add(node);
+        int i=0;
+        while(!queue.isEmpty()) {
+            Node<E> temp= queue.remove();
+            if((Integer)temp.getElement()!=0) {
+            	temp.setelementy(y[i]);
+            	//System.out.println(temp.getElement()+" "+temp.getelementy());
+            	i++;
+            }
+          //  System.out.print(temp.getElement()+" ");
+            if(temp.getlChild()!=null) {
+                queue.add(temp.getlChild());
+            }
+            if(temp.getrChild()!=null) {
+                queue.add(temp.getrChild());
+            }
+        }
+    }
+    
+    
+    
+    public void top(Node<E> node,int n) {
+		// TODO Use the queue to do the traversal. You can also use the inbuilt Queue
+    	 Queue<Node> queue = new LinkedList<Node>();
+         queue.add(node);
+         int arr[]=new int[n];
+         int i=0;
+         while(!queue.isEmpty()) {
+             Node<E> temp= queue.remove();
+             if(((Integer)temp.getElement()!=0)&&(temp.getElement()!=null)) {
+             	arr[i]=temp.getelementy();
+             	//System.out.println(temp.getElement()+" "+temp.getelementy());
+             	i++;
+             }
+           //  System.out.print(temp.getElement()+" ");
+             if(temp.getlChild()!=null) {
+                 queue.add(temp.getlChild());
+             }
+             if(temp.getrChild()!=null) {
+                 queue.add(temp.getrChild());
+             }
+         }
+     
+         Arrays.sort(arr);
+         int j=0;
+         
+         int h= getDepth(node);
+       //  if(node!=root) {
+       //  if(arr[arr.length-1]==top(root,n)) {
+         System.out.println(arr[arr.length-h-1]);
+        // return arr[arr.length-h-1];}else {
+        	// System.out.println(arr[arr.length-h-1]);
+           //   return arr[arr.length-h-1];        
+         
+         //return arr[arr.length-h-1];
+    }
+	
+	
+
+    public void eulerTraverse(Node<E> node) {
+        // TODO Auto-generated method stub
+        if(node==null) {
+            return;
+        }
+        
+        System.out.print(node.getElement()+" ");
+        if(node.getlChild()!=null) {
+            
+            eulerTraverse(node.getlChild());
+            System.out.print(node.getElement()+" ");
+        }
+        if(node.getrChild()!=null) {
+            
+            eulerTraverse(node.getrChild());
+            System.out.print(node.getElement()+" ");
+        }else {
+            return;
+        }
+        
+        
+    }
+
+    public int getDepth(Node<E> node) {
+        // TODO Auto-generated method stub
+        Node<E> temp=new Node<E>();
+        temp=node;
+        int i=0;
+        while(temp.getParent()!=null) {
+            temp=temp.getParent();
+            i++;
+        }
+        return i;
+    }
+
+    public int getHeight(Node<E> node) {
+        // TODO Auto-generated method stub
+        int l=0,r=0;
+        if(node==null) {
+            return 0;
+        }
+        l=getHeight(node.getlChild());
+        r=getHeight(node.getrChild());
+        
+        if(l>r) {
+            return l+1;
+        }else {
+            return r+1;
+        }
+    }
+    
+    
+
+    public int size() {
+        // TODO Auto-generated method stub
+        return sz;
+    }
+
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return (sz==0);
+    }
+
+
+    public boolean isProper() {
+        // TODO Auto-generated method stub
+    Node<E> temp=root;    
+    mod_inorder(root);
+    if(prop==1) {
+        return true;
+    }else {
+        return false;
+    }
+    }
+    public void mod_inorder(Node<E> node) {
+        if(node==null) {
+            return;
+        }
+        if(node.getlChild()!=null) {
+            mod_inorder(node.getlChild());
+        }
+        if((node.getlChild()==null)||(node.getrChild()==null)) {
+            prop=0;
+        }else {
+            if((node.getlChild()!=null)&&(node.getrChild()!=null))
+            {prop=1;
+        }else {
+            prop=0;
+        }}
+        
+        if(node.getrChild()!=null) {
+            mod_inorder(node.getrChild());
+        }
+        
+        
+        
+    }
+    
+    
+
+public boolean isComplete() {
+        // TODO Auto-generated method stub
+    int i=0;
+    
+    int ht= getHeight(root)-1;
+    int n=pow(2,ht);
+    i=n;
+    while(i<sz) {
+        if(nodelist[i]==null) {
+            while(i<sz) {
+                if(nodelist[i]==null) {
+                    i++;
+                }else{
+                    return false;
+                }
+            }
+            return true;
+        }else {
+        i++;
+        
+        
+    }}
+        return true;
+    }
+
+public int pow(int a,int b) {
+    int i=0;
+    while(i<b) {
+        a=a*a;
+        i++;
+    }
+    return a;
+}
+
+    public void printExternal() {
+        // TODO Auto-generated method stub
+        // TODO Use the queue to do the traversal. You can also use the inbuilt Queue
+        Node<E> node=root; 
+        mod_preorder(root);
+    }
+    public void mod_preorder(Node<E> node) {
+        if(node==null) {
+            return;
+        }
+        if((node.getlChild()==null)&&(node.getrChild()==null)) {
+            System.out.print(node.getElement()+" ");
+        return;
+        }
+        if(node.getlChild()!=null) {
+            mod_preorder(node.getlChild());
+        }
+        if(node.getrChild()!=null) {
+            mod_preorder(node.getrChild());
+        }
+        
+    }
+
+
+    
+    
+
+    
+
+}
+
+
+
+
+
+
+
+
+ 
+ import java.util.Scanner;
+ import java.lang.Math;
+ public class q2 {
+ public static void main(String [] args) {
+	int n;
+	System.out.println("enter the no of elements");
+    Scanner inp=new Scanner(System.in);
+    n=inp.nextInt();
+    //int index;
+    int val[]=new int[n];
+    int index=(int) (Math.log(n)/Math.log(2));
+	System.out.println(index);
+
+    //System.out.println(index);
+    int seek;
+    seek=(int)Math.pow(2, index+1);
+	System.out.println(seek);
+    index++;
+    index=(int)Math.pow(2,index+1);
+	System.out.println(index);
+	 BinaryTree<Integer> tree=new BinaryTree<Integer>();
+	    //tree.siz(index);
+	Integer key[]=new Integer[index];
+    key[0]=null;
+	int i=1;
+   	System.out.println("enter the x and y coordinates");
+
+    while(i<index) {
+    	 if(i==seek-1) {
+    		 break;
+    	 }
+    	 key[i++]=0;
+    	//	System.out.println(key[i-1]);
+
+    	 }
+    
+    int j=0;
+    while((i<index-1)&&(j<n)){
+    	key[i++]=inp.nextInt();
+		//System.out.println(key[i-1]);
+
+    	val[j++]=inp.nextInt();
+    }
+    int k=0;
+    while(k<key.length) {
+		//System.out.println(key[k++]);
+k++;
+    }
+    
+   
+tree.constructTree(key);
+tree.levelorderTraverse(tree.getRoot(), val);
+//System.out.println(tree.getRoot().getElement());
+tree.top(tree.getRoot(),n);
+//tree.top(tree.getRoot().getlChild(), n);   
+tree.top(tree.getRoot().getlChild(), n);    
+    
+  // tree.printTree();
+    
+    
+    
+    }
+    }
