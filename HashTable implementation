@@ -1,0 +1,180 @@
+package hash;
+
+public interface HashTableADT<E> {
+	public void insert(int key, E data1);
+	public int[] getKeys();
+	public E[] getData();
+	public int rehashchoose(int oldhash, int sz, int j, int key);
+	public int hashfunction(int key, int sz);
+	public int rehashlinear(int oldhash, int sz, int j);
+	public int rehashquadratic(int oldhash, int sz, int j);
+	public int rehashdouble(int oldhash, int sz, int j, int key);
+	public E find(int key);
+	public void printSlots();
+	public void printData();
+}
+
+
+
+
+package hash;
+
+public class HashTable<E> implements HashTableADT<E> {
+
+	private int sz;
+	private int[] slots;
+	private E[] data;
+	private int collisiontype;
+	
+	public HashTable(int sz1, int type){
+		sz = sz1;
+		collisiontype = type;
+		slots = new int[sz];
+		data = (E[]) new Object[sz];
+		
+	}
+	
+	public int[] getKeys(){
+		return slots;
+	}
+	
+	public E[] getData(){
+		return data;
+	}
+	
+	public void insert(int key, Object data1) {
+		// TODO Auto-generated method stub
+		int h1=hashfunction(key,sz);
+		if (slots[h1]==0){
+		//	return
+			slots[h1]=key;
+			data[h1]=(E) data1;
+		}
+		else{
+			if (slots[h1]==key){
+				data[h1]=(E) data1;
+			}
+			else{
+				
+				int j=1;
+				int probe = rehashchoose(h1,sz,j,key);
+				while(slots[probe]!=0) {
+					probe=rehashchoose(h1,sz,j++,key);
+				}
+				slots[probe] = key;
+				data[probe] = (E) data1;
+			}
+		}
+	}
+
+	public int rehashchoose(int oldhash, int sz, int j, int key) {
+		// TODO Auto-generated method stub
+		if (collisiontype==1)
+			return rehashlinear(oldhash,sz,j);
+		else if (collisiontype==2)
+			return rehashquadratic(oldhash,sz,j);
+		else
+			return rehashdouble(oldhash,sz,j,key);
+		
+	}
+
+	public int hashfunction(int key, int sz) {
+		// TODO Auto-generated method stub
+		return (key % sz);
+	}
+
+	public int rehashlinear(int oldhash, int sz, int j) {
+		// TODO Auto-generated method stub
+		return ((oldhash+j)%sz);
+	}
+
+	public int rehashquadratic(int oldhash, int sz, int j) {
+		// TODO Auto-generated method stub
+		return ((oldhash+j*2)%sz);
+	}
+
+	public int rehashdouble(int oldhash, int sz, int j, int key) {
+		// TODO Auto-generated method stub
+		int h2 = 7-(key%7);
+		return ((oldhash+j*key)%sz);
+	}
+
+	public E find(int key) {
+		// TODO Auto-generated method stub
+		int h1=hashfunction(key,sz);
+		boolean stop = false;
+		boolean found = false;
+		E d1 = null;
+		int probe = h1;
+		int j=0;
+		while (slots[probe]!=key || !found  && !stop){
+			if (slots[probe]==key){
+				d1 = data[probe];
+				System.out.println("found"+d1);
+				return d1;
+			}
+			else{
+				j++;
+				probe = rehashchoose(h1,sz,j,key);
+				if (probe == h1) {
+					return d1;
+				}
+			}
+			
+		}
+		return d1;
+	}
+
+	public void printSlots() {
+		// TODO Auto-generated method stub
+		for (int i=0;i<sz;i++){
+			System.out.print(slots[i]+": ");
+		}
+		System.out.println("");
+	}
+
+	@Override
+	public void printData() {
+		// TODO Auto-generated method stub
+		for (int i=0;i<sz;i++){
+			System.out.print(data[i]+": ");
+		}
+		System.out.println("");
+		
+	}
+
+	
+
+}
+
+
+
+
+
+package hash;
+
+import java.util.Scanner;
+
+public class testHash {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner in1 = new Scanner(System.in);
+		System.out.println("Enter Collision Type");
+		int type = in1.nextInt();
+		HashTableADT<String> ht = new HashTable<String>(13,type);
+		ht.insert(54, "cat");
+		ht.insert(26, "dog");
+		ht.insert(93, "lion");
+		ht.insert(17, "elephant");
+		ht.insert(77, "crane");
+		ht.insert(31, "boar");
+		ht.insert(44, "peacock");
+		ht.insert(55, "deer");
+		ht.insert(20, "chicken");
+		ht.printSlots();
+		ht.printData();
+		System.out.println("find" + ht.find(93));
+	}
+
+}
