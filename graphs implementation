@@ -1,0 +1,304 @@
+package graphs;
+import java.util.ArrayList;
+public class Node<E> {
+	private E element; 
+	private int id;
+	//private Map<Node,Integer> neighbors = new HashMap<Node,Integer>();
+	private ArrayList<Node> neighbors = new ArrayList<Node>();
+		
+	public boolean visited= false;
+	
+	public Node(int id1){
+		id = id1;
+		
+	}
+	
+	public int getId(){
+		return id;
+	}
+	public E getElement(){
+		return element;
+	}
+	public void setElement(E val){
+		element = val;
+	}
+	public ArrayList<Node> getNeighbors(){
+		return neighbors;
+	}
+	public void addNeighbor(Node cur){
+		neighbors.add(cur);
+	}
+	
+	public void removeNeighbor(Node cur){
+		neighbors.remove(cur);
+	}
+	
+	public int getDegree(){
+		return neighbors.size();
+	}
+	
+	public void printNeighbors(){
+		for (int i=0;i<neighbors.size();i++){
+			System.out.print(neighbors.get(i).getId()+": ");
+		}
+	}
+	
+}
+
+
+
+
+
+
+
+
+//package graphs;
+import java.util.ArrayList;
+public interface IGraph<E> {
+	int size();
+	boolean isEmpty();
+	public ArrayList<Node<E>> getNodes();
+	public ArrayList<Edge<E>> getEdges();
+	public void addNode(Node<E> curnode);
+	public int totalDegree();
+	public void DFS(Node<E> start);
+	public void BFS(Node<E> start);
+	public int[][] getAdjMatrix();
+	public void printGraph();
+	public void addEdge(Node<E> st, Node<E> dest, double wt);
+	public Node<E> getNode(int val); 
+	public boolean adjacent(Node<E> n1, Node<E> n2);
+	//public void MSTKruskal();
+	public boolean hasCycle();
+	public Edge<E> getEdge(Node<E> s, Node<E> d);
+	public void reset();
+}
+
+
+
+
+
+package graphs;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+//import Heap.*;
+
+import java.util.Queue;
+//import java.util.LinkedHashSet;
+/**
+ * @author vi
+ *
+ */
+public class Graph<E> implements IGraph<E>{
+	private int sz=0;
+	private ArrayList<Node<E>> nodeList = new ArrayList<Node<E>>();
+	private ArrayList<Edge<E>> edgeList = new ArrayList<Edge<E>>();
+	//public Node<E>[] dfsanc;
+	//public Graph(int sz1){
+	//	sz=sz1;
+	//	dfsanc = (Node<E>[]) new Object[sz];
+	//}
+	public int size() {
+		// TODO Auto-generated method stub
+		return sz;
+	}
+
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return (size()==0); 
+	}
+
+	public ArrayList<Node<E>> getNodes() {
+		// TODO Auto-generated method stub
+		return nodeList;
+	}
+	
+	public ArrayList<Edge<E>> getEdges(){
+		return edgeList;
+	}
+
+	public void addNode(Node<E> curnode) {
+		// TODO Auto-generated method stub
+		nodeList.add(curnode);
+		sz++;
+	}
+
+	public int totalDegree() {
+		// TODO Auto-generated method stub
+		int deg = 0;
+		for (int i=0;i<nodeList.size();i++){
+			deg += nodeList.get(i).getDegree();
+		}
+		
+		return deg;
+	}
+
+	public void DFS(Node<E> start) {
+		// TODO Auto-generated method stub
+		Node<E> curnode = start;
+		System.out.println("DFSnext"+curnode.getId());
+		int pos = nodeList.indexOf(curnode);
+		for (int i=0;i<curnode.getNeighbors().size();i++){
+			Node<E> nbr = curnode.getNeighbors().get(i);
+			
+			if (!nbr.visited){
+				DFS(nbr);
+				return;
+			}
+			else{
+				
+					System.out.println("Backedge"+curnode.getId()+":"+nbr.getId());
+					
+				}	
+			}
+		}
+		
+		
+	
+	public void reset(){
+		for (int i=0;i<nodeList.size();i++){
+			nodeList.get(i).visited=false;
+		}
+		for (int i=0;i<edgeList.size();i++){
+			edgeList.get(i).visited=false;
+		}
+	}
+
+	public void BFS(Node<E> start) {
+		// TODO Auto-generated method stub
+		Queue<Node<E>> queue = new LinkedList<Node<E>>();
+		queue.add(start); //enqueue
+		Node<E> curnode = start;// dequeues an element
+		curnode.visited=true;
+		
+		while(!queue.isEmpty())
+		{  	curnode=queue.poll();
+			System.out.println("BFS next" + curnode.getId() );
+			for (int i=0;i<curnode.getNeighbors().size();i++){
+				Node<E> nbr = curnode.getNeighbors().get(i);
+			   if (!nbr.visited){
+					queue.add(nbr);
+					nbr.visited=true;
+					
+				}
+				else{
+					System.out.println("Crossedge"+curnode.getId()+":"+nbr.getId());
+					
+				}
+			}
+			
+			
+		}
+	}
+	
+	public boolean adjacent(Node<E> n1, Node<E> n2){
+		return (n1.getNeighbors().contains(n2));
+	}
+
+	public int[][] getAdjMatrix() {
+		// TODO Auto-generated method stub
+		int[][] adjMatrix = new int[sz][sz];
+		
+		return adjMatrix;
+	}
+
+	public void printGraph() {
+		// TODO Auto-generated method stub
+		for (int i=0;i<nodeList.size();i++){
+			System.out.println("Node"+nodeList.get(i).getId());
+			nodeList.get(i).printNeighbors();
+		}
+		
+	}
+	
+	public void addEdge(Node<E> st, Node<E> dest, double wt) {
+		// TODO Auto-generated method stub
+		int pos1 = nodeList.indexOf(st);
+		int pos2 = nodeList.indexOf(dest);
+		nodeList.get(pos1).addNeighbor(dest);
+		nodeList.get(pos2).addNeighbor(st);
+		Edge<E> e1 = new Edge<E>(edgeList.size()+1,st,dest);
+		e1.setWt(wt);
+		edgeList.add(e1);
+	}
+
+	public Node<E> getNode(int id) {
+		// TODO Auto-generated method stub
+		for (int i=0;i<nodeList.size();i++){
+			if (nodeList.get(i).getId()==id) return nodeList.get(i);
+		}
+		return null;	
+		
+	}
+
+	
+	
+		
+		
+		
+	
+
+	public boolean hasCycle(){
+		return false;
+	}
+
+	public Edge<E> getEdge(Node<E> s, Node<E> d) {
+		// TODO Auto-generated method stub
+		Edge<E> temp;
+		
+		//return edgeList.get(i);
+		
+		return null;
+	}
+
+	
+}
+
+
+
+
+
+package graphs;
+
+public class testGraph<E> {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		IGraph<Integer> g1 = new Graph<Integer>();
+		g1.addNode(new Node<Integer>(1));
+		g1.addNode(new Node<Integer>(2));
+		g1.addNode(new Node<Integer>(3));
+		g1.addNode(new Node<Integer>(4));
+		g1.addNode(new Node<Integer>(5));
+		g1.addNode(new Node<Integer>(6));
+		g1.addNode(new Node<Integer>(7));
+		g1.addNode(new Node<Integer>(8));
+		g1.addEdge(g1.getNode(1),g1.getNode(2),5.0);
+		g1.addEdge(g1.getNode(2),g1.getNode(3),2.0);
+		g1.addEdge(g1.getNode(1),g1.getNode(6),4.0);
+		g1.addEdge(g1.getNode(3),g1.getNode(4),3.0);
+		g1.addEdge(g1.getNode(1), g1.getNode(3),2.0);
+		g1.addEdge(g1.getNode(2), g1.getNode(5),7.0);
+		g1.addEdge(g1.getNode(3), g1.getNode(8),4.0);
+		g1.addEdge(g1.getNode(6), g1.getNode(8),6.0);
+		g1.addEdge(g1.getNode(4), g1.getNode(6),2.0);
+		g1.addEdge(g1.getNode(3), g1.getNode(7),5.0);
+		g1.addEdge(g1.getNode(7), g1.getNode(4),3.0);
+		g1.addEdge(g1.getNode(1), g1.getNode(7),5.0);
+		g1.printGraph();
+		System.out.println("Degree of node"+g1.getNode(1).getDegree());
+		int[][] aMatrix = g1.getAdjMatrix();
+		/*for (int i=0;i<aMatrix.length;i++){
+			for (int j=0;j<aMatrix.length;j++){
+				System.out.print(aMatrix[i][j]+":");
+			}
+			System.out.println(" ");
+		}*/
+		g1.BFS(g1.getNode(1));
+		//g1.MSTKruskal();
+	}
+
+}
+
+
