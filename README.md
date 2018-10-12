@@ -1,2 +1,2 @@
-# Amrita
+# amrita
 college stuff
