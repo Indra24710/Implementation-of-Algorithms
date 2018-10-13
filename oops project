@@ -1,0 +1,443 @@
+package texteditor;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import sun.audio.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.awt.event.ActionEvent;
+
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
+import com.sun.speech.freetts.audio.JavaClipAudioPlayer;
+import javax.swing.JTextArea;
+public class texteditor {
+    public String find,rep;
+	private JFrame frame;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+    private static final String say="indra";
+	/**
+	 * Launch the application.
+	 */
+ @SuppressWarnings("restriction")
+public static void music() {
+	 InputStream music;
+	 try{
+		 music=new FileInputStream(new File("E:\\java programs\\TheHitchhikersGuideToTheGalaxy\\Believers.wav"));
+	 AudioStream audio=new AudioStream(music);
+	 AudioPlayer.player.start(audio);
+	 }
+	 catch(Exception e ) {
+		 
+	 }
+	 
+ }
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					texteditor window = new texteditor();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}  
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public texteditor() {
+		 System.setProperty("mbrola.base", "C:\\Users\\indra\\Downloads\\mbrola");
+
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+				frame = new JFrame();
+		frame.setBounds(0, 0, 500, 500);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(99, 11, 257, 59);
+		frame.getContentPane().add(panel);
+		
+		JLabel lblTexteditor = new JLabel("TextEditor 0.5");
+		lblTexteditor.setFont(new Font("Times New Roman", Font.PLAIN, 35));
+		panel.add(lblTexteditor);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(109, 78, 232, 29);
+		frame.getContentPane().add(panel_1);
+		
+		JLabel lblEnterTheAddress = new JLabel("Enter the address of the text file");
+		lblEnterTheAddress.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		panel_1.add(lblEnterTheAddress);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(153, 118, 140, 42);
+		frame.getContentPane().add(panel_2);
+		
+		textField = new JTextField();
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String add=textField.getText();
+			}
+		});
+		panel_2.add(textField);
+		textField.setColumns(10);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBounds(74, 227, 119, 29);
+		frame.getContentPane().add(panel_3);
+		
+		JButton btnCheckIfExists = new JButton("Check If Exists");
+		panel_3.add(btnCheckIfExists);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBounds(59, 278, 134, 29);
+		frame.getContentPane().add(panel_4);
+		
+		JButton btnFindAndReplace_1 = new JButton("Find and Replace");
+		panel_4.add(btnFindAndReplace_1);
+		btnFindAndReplace_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setBounds(279, 227, 113, 29);
+		frame.getContentPane().add(panel_6);
+		
+		textField_1 = new JTextField();
+		textField_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s=textField_1.getText();
+				Files f1=new Files();
+				try {
+					f1.getInp();
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				boolean resp=true;
+				try {
+					resp=f1.check(s);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				VoiceManager v= VoiceManager.getInstance();
+				Voice iTalk = v.getVoice("mbrola_us1");
+				
+				iTalk.allocate();
+			if(resp==true) {
+				iTalk.speak("the entered word exists in the text file");
+			}else {
+				iTalk.speak("the entered word does not exist in the text file");
+
+			}
+				
+				
+			}
+		});
+		panel_6.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JPanel panel_7 = new JPanel();
+		panel_7.setBounds(218, 278, 113, 29);
+		frame.getContentPane().add(panel_7);
+	//	String find,replace;
+		textField_2 = new JTextField();
+		textField_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 find=textField_2.getText();
+			}
+		});
+		textField_2.setColumns(10);
+		panel_7.add(textField_2);
+		
+		JButton btnKryptonite = new JButton("Kryptonite");
+		btnKryptonite.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Files f1=new Files();
+				String s="";
+				try {
+					s = f1.getInp();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				VoiceManager v= VoiceManager.getInstance();
+				Voice iTalk = v.getVoice("mbrola_us1");
+				
+				iTalk.allocate();
+				iTalk.speak(s);
+				
+			}
+		});
+		btnKryptonite.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnKryptonite.setBounds(177, 341, 126, 23);
+		frame.getContentPane().add(btnKryptonite);
+		
+		JPanel panel_5 = new JPanel();
+		panel_5.setBounds(341, 278, 113, 29);
+		frame.getContentPane().add(panel_5);
+		
+		textField_3 = new JTextField();
+		textField_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 rep=textField_3.getText();
+				Files f=new Files();
+				try {
+					f.finrep(find, rep);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+						
+			}
+		});
+		textField_3.setColumns(10);
+		panel_5.add(textField_3);
+		
+		JPanel panel_8 = new JPanel();
+		panel_8.setBounds(246, 307, 57, 23);
+		frame.getContentPane().add(panel_8);
+		
+		JLabel lblFind = new JLabel("Find");
+		panel_8.add(lblFind);
+		
+		JPanel panel_9 = new JPanel();
+		panel_9.setBounds(368, 307, 57, 23);
+		frame.getContentPane().add(panel_9);
+		
+		JLabel lblReplace = new JLabel("Replace");
+		panel_9.add(lblReplace);
+		
+		JButton btnCmonPumpIt = new JButton("Release the Beast");
+		btnCmonPumpIt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			frame.getContentPane().setBackground(Color.BLACK);
+			   panel.setBackground(Color.BLACK);
+			   panel_1.setBackground(Color.BLACK);
+
+			   panel_2.setBackground(Color.BLACK);
+
+			   panel_3.setBackground(Color.BLACK);
+
+			   panel_4.setBackground(Color.BLACK);
+
+			   panel_5.setBackground(Color.BLACK);
+
+			   panel_6.setBackground(Color.BLACK);
+
+			   panel_7.setBackground(Color.BLACK);
+			   panel_8.setBackground(Color.BLACK);
+			   panel_9.setBackground(Color.BLACK);
+			   lblTexteditor.setForeground(Color.RED);
+               lblEnterTheAddress.setForeground(Color.RED);
+               lblFind.setForeground(Color.RED);
+
+               lblReplace.setForeground(Color.RED);
+               btnFindAndReplace_1.setForeground(Color.RED);
+               btnCmonPumpIt.setText("The Beast is out");
+               btnCmonPumpIt.setForeground(Color.RED);
+               btnCheckIfExists.setForeground(Color.RED);
+               btnKryptonite.setForeground(Color.RED);
+               music();
+			
+			}
+		});
+		btnCmonPumpIt.setBounds(164, 375, 155, 40);
+		frame.getContentPane().add(btnCmonPumpIt);
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package texteditor;
+import java.io.*;
+import java.util.*;
+
+public class Files {
+	Files(){
+		
+	}
+	String input="";
+	String output="";
+	public String getInp() throws IOException {
+		InputStream i = new FileInputStream("E:/file1.txt");
+		
+		int j=0;
+		
+		while(j!=-1)
+		{
+			j=i.read();
+			if(j!=-1){
+				input+=(char) j ;
+			}
+		}
+		
+		return input;
+	}
+public void finrep(String fin,String rep) throws IOException {
+	Scanner sc = new Scanner(System.in);
+	File p = new File("E:/file1.txt");
+	File q = new File("E:/file2.txt");
+	//String input = "" ;
+	String inter = "" ;
+	String find = fin;
+	String replace = rep;
+	String output ="";
+//	InputStream i = new FileInputStream("E:/file1.txt");
+	OutputStream o = new FileOutputStream("E:/file2.txt");
+	
+	String input=getInp();
+	int k=0;
+	while(k<input.length())
+	{
+		if((input.charAt(k)==32)|| (input.charAt(k)==10) || (k==input.length()-1))
+		{
+			if(inter.equals(find))
+			{
+				inter = replace;
+				output += inter + input.charAt(k);
+				if(k==input.length()-1){
+					output+=input.charAt(k);
+				}
+				inter = "";
+				k++;
+			}
+			else
+			{
+				output += inter + input.charAt(k);
+				k++;
+				inter = "";
+				if(k==input.length()-1){
+					output+=input.charAt(k);
+				}
+			}
+		}
+		if(k >= input.length())
+			break;
+		inter += input.charAt(k);
+		k++;
+	}
+	System.out.print(output);
+	byte[] buf = output.getBytes();
+	o.write(buf);
+	PrintWriter writer=new PrintWriter(p);
+	writer.print("");
+	
+    InputStream m= new FileInputStream("E:/file2.txt");
+    OutputStream n= new FileOutputStream("E:/file1.txt");
+	int j=0;
+	input="";
+	while(j!=-1)
+	{
+		j=m.read();
+		if(j!=-1){
+			input+=(char) j ;
+		}
+	}
+	 buf=input.getBytes();
+	 n.write(buf);
+	
+	 PrintWriter write=new PrintWriter(q);
+		write.print("");
+	
+	}
+
+
+public boolean check(String ch) throws IOException {
+	
+	File p = new File("E:/file1.txt");
+	File q = new File("E:/file2.txt");
+	//String input = "" ;
+	String inter = "" ;
+	
+	String output ="";
+//	InputStream i = new FileInputStream("E:/file1.txt");
+	OutputStream o = new FileOutputStream("E:/file2.txt");
+	
+	String input=getInp();
+	int k=0;
+	while(k<input.length())
+	{
+		if((input.charAt(k)==32)|| (input.charAt(k)==10) || (k==input.length()-1))
+		{
+			if(inter.equals(ch))
+			{
+				return true;
+				
+			}
+			else
+			{
+				output += inter + input.charAt(k);
+				k++;
+				inter = "";
+				if(k==input.length()-1){
+					output+=input.charAt(k);
+				}
+			}
+		}
+		if(k >= input.length())
+			break;
+		inter += input.charAt(k);
+		k++;
+	}
+	
+	
+	return false;
+	
+	
+}
+
+
+
+	}
+
+
+
