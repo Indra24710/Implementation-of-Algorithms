@@ -1,6 +1,9 @@
-package graphs;
 import java.util.ArrayList;
-public class Node<E> {
+import java.util.LinkedList;
+//import Heap.*;
+
+import java.util.Queue;
+ class Node<E> {
 	private E element; 
 	private int id;
 	//private Map<Node,Integer> neighbors = new HashMap<Node,Integer>();
@@ -52,9 +55,8 @@ public class Node<E> {
 
 
 
-//package graphs;
-import java.util.ArrayList;
-public interface IGraph<E> {
+
+ interface IGraph<E> {
 	int size();
 	boolean isEmpty();
 	public ArrayList<Node<E>> getNodes();
@@ -75,9 +77,7 @@ public interface IGraph<E> {
 }
 
 
-package graphs;
-
-public class Edge<E> {
+ class Edge<E> {
 	private int id;
 	private Node<E> stnode;
 	private Node<E> destnode;
@@ -120,19 +120,12 @@ public class Edge<E> {
 
 
 
-package graphs;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-//import Heap.*;
-
-import java.util.Queue;
 //import java.util.LinkedHashSet;
 /**
  * @author vi
  *
  */
-public class Graph<E> implements IGraph<E>{
+ class Graph<E> implements IGraph<E>{
 	private int sz=0;
 	private ArrayList<Node<E>> nodeList = new ArrayList<Node<E>>();
 	private ArrayList<Edge<E>> edgeList = new ArrayList<Edge<E>>();
@@ -301,9 +294,8 @@ public class Graph<E> implements IGraph<E>{
 
 
 
-package graphs;
 
-public class testGraph<E> {
+ class testGraph<E> {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -342,5 +334,4 @@ public class testGraph<E> {
 	}
 
 }
-
 
