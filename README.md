@@ -1,2 +1,1 @@
-# Amrita
-college stuff
+# Algorithms implementation
